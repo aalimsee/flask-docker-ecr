@@ -35,4 +35,4 @@ jobs:
         # Without specifying a platform during Docker build and push, the resulting image is typically built for the architecture of the system where the build is happening and will run on systems with the same architecture, primarily Linux
         platforms: linux/amd64,linux/arm64
 
-        tags: ${{ secrets.DOCKER_USERNAME }}/flask-docker-app:latest
+        tags: ${{ secrets.DOCKER_USERNAME }}/flask-docker-ecr:latest
