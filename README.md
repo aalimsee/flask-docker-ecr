@@ -1,7 +1,7 @@
 
 
 
-# flask-docker-app
+# flask-docker-ecr
 3.3 Introduction to Containerisation
 
 # Steps
