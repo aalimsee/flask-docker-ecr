@@ -1,3 +1,6 @@
+
+
+
 name: Terraform Destroy
 
 # This will provide manual trigger event, every time we create push a commit.
@@ -13,7 +16,7 @@ jobs:
   CICD-DESTROY-ECS:
     runs-on: ubuntu-latest
 
-  steps:
+    steps:
     - name: Checkout
       uses: actions/checkout@v4
 
