@@ -1,0 +1,39 @@
+
+
+
+name: Docker Build and Push
+
+on:
+  push:
+    branches:
+      - main
+      - feature/ecs
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Login to DockerHub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        push: true
+
+        # Without specifying a platform during Docker build and push, the resulting image is typically built for the architecture of the system where the build is happening and will run on systems with the same architecture, primarily Linux
+        platforms: linux/amd64,linux/arm64
+        
+        tags: ${{ secrets.DOCKER_USERNAME }}/flask-docker-app:latest
+
