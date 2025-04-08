@@ -1,6 +1,3 @@
-
-
-
 name: Terraform Destroy
 
 # This will provide manual trigger event, every time we create push a commit.
@@ -9,17 +6,17 @@ on:
   workflow_dispatch: # # Allows manual triggering
 
 
-env:            
-  AWS_REGION: us-east-1  
+env:
+  AWS_REGION: us-east-1
 
 jobs:
   CICD-DESTROY-ECS:
     runs-on: ubuntu-latest
 
-    steps:
+  steps:
     - name: Checkout
       uses: actions/checkout@v4
-   
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -29,9 +26,9 @@ jobs:
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
-   
+
     - name: Terraform Init
       run: terraform init
-   
+
     - name: Terraform Destroy
       run: terraform destroy --auto-approve
