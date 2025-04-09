@@ -1,38 +1,39 @@
 
 
 
-name: Terraform Destroy
+name: Terraform Destroy ECS Infra
 
-# This will provide manual trigger event, every time we create push a commit.
-# Reference: https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows
 on:
-  workflow_dispatch: # # Allows manual triggering
-
+  workflow_dispatch:
 
 env:
   AWS_REGION: us-east-1
+  PROJECT_NAME: my-ecs-app
 
 jobs:
-  CICD-DESTROY-ECS:
+  destroy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
+      - name: Get ECR URI
+        id: ecr
+        run: |
+          ECR_URI=$(aws ecr describe-repositories --repository-names ${PROJECT_NAME}-repo --query "repositories[0].repositoryUri" --output text)
+          echo "ECR_URI=$ECR_URI" >> $GITHUB_ENV
 
-    - name: Terraform Init
-      run: terraform init
-
-    - name: Terraform Destroy
-      run: terraform destroy --auto-approve
-      
+      - name: Terraform Destroy
+        working-directory: infra
+        run: |
+          terraform init
+          terraform destroy -auto-approve \
+            -var="ecr_repository_url=${{ env.ECR_URI }}" \
+            -var="image_tag=dummy"  # dummy tag for destroy
