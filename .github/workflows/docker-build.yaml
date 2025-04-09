@@ -2,7 +2,7 @@ name: Docker CI - Build & Push to ECR
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/ecr]
     paths:
       - '**/Dockerfile'
       - '.github/workflows/docker.yml'
