@@ -5,7 +5,7 @@ on:
     branches: [main, feature/ecr]
     paths:
       - '**/Dockerfile'
-      - '.github/workflows/docker.yml'
+      - '.github/workflows/docker-build.yml'
 
 env:
   PROJECT_NAME: my-ecs-app
@@ -34,3 +34,4 @@ jobs:
           ECR_URI=$(aws ecr describe-repositories --repository-names ${PROJECT_NAME}-repo --query "repositories[0].repositoryUri" --output text)
           docker build -t $ECR_URI:$IMAGE_TAG .
           docker push $ECR_URI:$IMAGE_TAG
+          
