@@ -8,18 +8,18 @@ provider "aws" {
 terraform {
   backend "s3" {
     bucket = "sctp-ce9-tfstate"
-    key    = "aalimsee-ce9-M3.3-flask-docker-app.tfstate" # Replace the value of key to <your>.tfstate
+    key    = "aalimsee-ce9-M3.4-flask-docker-ecr.tfstate" # Replace the value of key to <your>.tfstate
     region = "us-east-1"
   }
 }
 
 resource "aws_vpc" "main" {
-  cidr_block = "144.0.0.0/16"
+  cidr_block = "145.0.0.0/16"
 }
 
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "144.0.1.0/24"
+  cidr_block              = "145.0.1.0/24"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
 }
@@ -102,7 +102,7 @@ resource "aws_ecs_task_definition" "flask_task" {
   container_definitions = jsonencode([
     {
       name  = "flask-container"
-      image = "aalimsee/flask-docker-app:latest"
+      image = "aalimsee/flask-docker-ecr:latest"
       portMappings = [
         {
           containerPort = 5000
